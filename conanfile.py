@@ -1,6 +1,7 @@
 from conans import ConanFile, AutoToolsBuildEnvironment, tools
 
 import os
+import tempfile
 
 class OpensslFipsConan(ConanFile):
     name = "OpenSSLFIPS"
@@ -21,6 +22,7 @@ class OpensslFipsConan(ConanFile):
         tools.get("https://www.openssl.org/source/openssl-1.0.2t.tar.gz")
 
     def build(self):
+        os.environ["FIPSDIR"] = os.path.join(tempfile.gettempdir(), "ssl", "fips-2.0")
         with tools.chdir(os.path.join(self.source_folder, 'openssl-fips-2.0.16')):
             env_build = AutoToolsBuildEnvironment(self)
             with tools.environment_append(env_build.vars):
@@ -39,10 +41,11 @@ class OpensslFipsConan(ConanFile):
         self.copy("*ssl.lib", dst="lib", keep_path=False)
         self.copy("*crypto.lib", dst="lib", keep_path=False)
         self.copy("*.dll", dst="bin", keep_path=False)
-        self.copy("fips_premain.c*", dst="src", src=os.path.join("openssl-fips-2.0.16", "fips"))
+        self.copy("fips_premain.c*", dst="lib", src=os.path.join("openssl-fips-2.0.16", "fips"))
         self.copy("fipscanister.o*", dst="lib", src=os.path.join("openssl-fips-2.0.16", "fips"))
         self.copy("fipsld", dst="bin", src=os.path.join("openssl-fips-2.0.16", "fips"))
         self.copy("fipsld++", dst="bin", src=os.path.join(self.source_folder, "src", "scripts"))
+        self.copy("openssl", dst="bin", src=os.path.join("openssl-1.0.2t", "apps"))
         self.copy("*.so", dst="lib", keep_path=False)
         self.copy("*.so.*", dst="lib", keep_path=False)
         self.copy("*.dylib", dst="lib", keep_path=False)

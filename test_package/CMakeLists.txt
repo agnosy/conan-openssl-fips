@@ -4,18 +4,16 @@ project(PackageTest CXX)
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
-set(X_OPENSSL_FIPS_BIN "/usr/local/ssl/fips-2.0/bin")
-
 string(
     CONCAT CMAKE_C_LINK_EXECUTABLE
     "env FIPSLD_CC=${CMAKE_C_COMPILER}"
-    " ${X_OPENSSL_FIPS_BIN}/fipsld <FLAGS> <CMAKE_C_LINK_FLAGS> <LINK_FLAGS> <OBJECTS>"
+    " ${CONAN_OPENSSLFIPS_ROOT}/bin/fipsld <FLAGS> <CMAKE_C_LINK_FLAGS> <LINK_FLAGS> <OBJECTS>"
     " -o <TARGET> <LINK_LIBRARIES>"
 )
 string(
     CONCAT CMAKE_CXX_LINK_EXECUTABLE
     "env FIPSLD_CC=${CMAKE_CXX_COMPILER}"
-    " ${X_OPENSSL_FIPS_BIN}/fipsld++ <FLAGS> <CMAKE_CXX_LINK_FLAGS> <LINK_FLAGS> <OBJECTS>"
+    " ${CONAN_OPENSSLFIPS_ROOT}/bin/fipsld++ <FLAGS> <CMAKE_CXX_LINK_FLAGS> <LINK_FLAGS> <OBJECTS>"
     " -o <TARGET> <LINK_LIBRARIES>"
 )
 
